@@ -1,0 +1,22 @@
+Welcome to Slack [re]Minder <%= @user.name %>
+===============================================
+
+You have successfully configured your Slack Minder account.
+Your email address (where Internet Calendar notifications will be sent) is <%= @user.email %>.
+All calendar events will be referenced to the <%= @user.tz %> TimeZone.
+
+---------------------------------------------------
+You can change/update any of these by simply entering (in Slack):
+ setup email: %<= @user.email %> timezone: <%= @user.tz %>
+
+ Timezones are:
+   1 - US Eastern
+   2 - US Central
+   3 - US Mountain
+   4 - US Pacific
+   5 - US Alaska/Hawaii
+
+Thanks,
+Your SlackMinder team
+
+(c) 2016 WebSembly, LLC

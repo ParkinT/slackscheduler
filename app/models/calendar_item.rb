@@ -1,0 +1,3 @@
+class CalendarItem < ApplicationRecord
+  belongs_to :user
+end

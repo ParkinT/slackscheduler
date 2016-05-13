@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Welcome to Slack [re]Minder <%= @user.name %></h1>
+    <p>
+      You have successfully configured your <em>Slack Minder</em> account</p>
+    <p>Your email address (where Internet Calendar notifications will be sent) is <%= @user.email %>.</p>
+    <p>All calendar events will be referenced to the <%= @user.tz %> TimeZone.</p>
+    <hr />
+    <p>You can change/update any of these by simply entering
+      <pre>setup email: <%= @user.email %> timezone: <%= @user.tz %></pre></p>
+    <p>Timezones are
+      <ul>
+        <li>1&nbs;-&nbsp;US Eastern</li>
+        <li>2&nbs;-&nbsp;US Central</li>
+        <li>3&nbs;-&nbsp;US Mountain</li>
+        <li>4&nbs;-&nbsp;US Pacific</li>
+        <li>5&nbs;-&nbsp;US Alaska/Hawaii</li>
+      </ul>
+    </p>
+    <hr />
+    <footer>&copy;2016, WebSembly, LLC</footer>
+  </body>
+</html>
