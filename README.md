@@ -28,7 +28,7 @@ schedule "Product Discussion" on May 27 at 3:00 pm @sean @paul @alex
 Before you can utilize the functionality you will need to "setup" your details in the application.  No fear; this is also accomplished through Slack!
 
 This is accomplished with a single message TO the Slack Scheduler:
-`schedule setup email: your_email@domain.com timezone: 3 `
+`setup email: your_email@domain.com timezone: 3 `
 The __timezone__ parameter is (in this initial release) a very simple
 choice from among:
   - 1 for East US
