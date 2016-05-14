@@ -77,7 +77,8 @@ return json must include
       end if time.include? -1
 
 
-      desc = input_string.scan(/["|'|\[|{](.*)["|'|\]|}]/)   #message is surrounded in "" or '' or [] or {}
+      desc = input_string.scan(/[“"|'|\[|{](.*)[”"|'|\]|}]/)   #message is surrounded in "" or '' or [] or {}
+      binding.pry
       @description = desc[0][0]
       day = Date.new(date[0].to_i, date[1].to_i, date[2].to_i).wday
       weekday = case day
