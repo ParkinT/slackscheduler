@@ -48,7 +48,7 @@ return json must include
 
       email = input.match(/email:\W*([0-9a-zA-Z\._\+@]+)\W?/)[1]
       timezone = TIMEZONES[input.match(/timezone:\W(\d+)\W?/)[1].to_i]
-      user.update_attributes(email: email, tz: timezone)
+      user.update_attributes(name: params[:user_name], email: email, tz: timezone)
       UserMailer.welcome_email(user).deliver_now
       render :json => { :username => SLACK_SCHEDULER_USER_NAME, :response_type => EPHEMERAL, :text => "Configuration updated!\nA validation email has been sent to #{email}" } and return
     when 'schedule', 'sched', 'set'
@@ -60,7 +60,6 @@ return json must include
 
       input_string = params[:text]
 
-      puts "To be parsed: #{input_string}"
       @attendees = parse_mentions(input_string)
       @mentions.each do |m|  #remove from the input string
         input_string.gsub("@#{m}", '')
@@ -152,16 +151,6 @@ return json must include
   # Acceptable format(s):
   #     May 03, 2017
   def find_date(input_string)
-=begin
-    found_date = input_string.downcase.scan(/((jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec).+\d{1,2},?\s+\d{2,4})/)
-    year = input_string.downcase.scan(/(20\d{2})/)
-    if !found_date.any?  #year was not specified
-      found_date = input_string.downcase.scan(/((jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec).+\d{1,2}^[\:\.])/)
-      year = Date.today.year
-    end
-=end
-
-# requires the keyword 'on'
     found_month = input_string.downcase.scan(/.*[on|ON|On]\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/)
     return ["month", found_month[0][0], -1] unless found_month
     month = case found_month[0][0]
