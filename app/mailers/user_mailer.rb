@@ -9,6 +9,7 @@ class UserMailer < ApplicationMailer
 
   def notification_email(user, ical)
     @user = user
+    logger.debug "UserMailer: user is #{user} and #{@user}"
     events = ical.instance_variable_get(:@events)
     @summary = events.first.instance_variable_get(:@summary)
     #mail.attachments['slackminder.ics'] = { mime_type: 'application/ics', content: ical.to_ical }
