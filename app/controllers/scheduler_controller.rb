@@ -75,6 +75,14 @@ return json must include
         render :json => { :username => SLACK_SCHEDULER_USER_NAME, :response_type => EPHEMERAL, :text => "Cannot interpret '#{time[0]}'.\nSyntax: '... at 1:30PM'" } and return
       end if time.include? -1
 
+      # here we will parse and calculate the duration
+      @event_duration = { hours: 1, minutes: 0, text: "" }
+      @event_duration[:text] = case @event_duration[:hours]
+                 when 0
+                   "#{'%02d' % @event_duration[:minutes]} minutes"
+                 else
+                   "#{@event_duration[:hours]}:#{'%02d' % @event_duration[:minutes]}"
+                 end
       desc = input_string.scan(/[“"|'|\[|{](.*)[”"|'|\]|}]/)   #message is surrounded in "" or '' or [] or {}
       @description = desc[0][0]
       day = Date.new(date[0].to_i, date[1].to_i, date[2].to_i).wday
@@ -96,11 +104,12 @@ return json must include
                 end
       @summary = "#{@description.scan(/^([\w]+)/)[0]} #{weekday} #{date[1]}-#{date[2]}"
       @summary = "#{@summary}-#{date[0]}" unless date[0].to_i == Date.today.year
+      @summary = "#{@summary}  -  #{@event_duration[:text]} duration"
       @timezone_id = @user.tz
 
       @event_start = DateTime.new date[0].to_i, date[1].to_i, date[2].to_i, time[0].to_i, time[1].to_i
       # default to one-hour event - until I can implement "for x hours (minutes)"
-      @event_end = DateTime.new date[0].to_i, date[1].to_i, date[2].to_i, time[0].to_i + 1, time[1].to_i
+      @event_end = DateTime.new date[0].to_i, date[1].to_i, date[2].to_i, time[0].to_i + @event_duration[:hours], time[1].to_i + @event_duration[:minutes]
       @event = create_calendar_event
     else
       # nop
@@ -110,7 +119,6 @@ return json must include
 
   def index
     if request.post?
-logger.debug "in index, user is #{@user.inspect}"
       summary =  @event.instance_variable_get(:@events).first.instance_variable_get(:@summary)
       UserMailer.notification_email(@user, @event).deliver_now
       @attendees.each do |a|  #notify any invited
@@ -118,7 +126,7 @@ logger.debug "in index, user is #{@user.inspect}"
         UserMailer.notification_email(user, @event).deliver_now if user
       end if @attendees
 
-     render :json => { :username => 'slack-scheduler', :response_type => "ephemeral", :text => "#{@summary} registered.\n" }
+     render :json => { :username => 'slack-scheduler', :response_type => "ephemeral", :text => "#{@summary} scheduled.\n" }
     else
       render :html => File.open('app/views/layouts/index.html').read.html_safe
     end
