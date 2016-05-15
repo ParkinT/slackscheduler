@@ -46,7 +46,8 @@ return json must include
       user = find_or_create_user(params[:user_id])
       input = params[:text].downcase
 
-      email = input.match(/email:\W*([0-9a-zA-Z\._\+@]+)\W?/)[1].gsub('mailto:', '')
+      email = input.match(/email:\W*mailto:([0-9a-zA-Z\._\+@]+)\W?/)[1]
+      binding.pry
       timezone = TIMEZONES[input.match(/timezone:\W(\d+)\W?/)[1].to_i]
       user.update_attributes(name: params[:user_name], email: email, tz: timezone)
       UserMailer.welcome_email(user).deliver_now
@@ -75,7 +76,6 @@ return json must include
         render :json => { :username => SLACK_SCHEDULER_USER_NAME, :response_type => EPHEMERAL, :text => "Cannot interpret '#{time[0]}'.\nSyntax: '... at 1:30PM'" } and return
       end if time.include? -1
 
-
       desc = input_string.scan(/[“"|'|\[|{](.*)[”"|'|\]|}]/)   #message is surrounded in "" or '' or [] or {}
       @description = desc[0][0]
       day = Date.new(date[0].to_i, date[1].to_i, date[2].to_i).wday
@@ -100,7 +100,8 @@ return json must include
       @timezone_id = @user.tz
 
       @event_start = DateTime.new date[0].to_i, date[1].to_i, date[2].to_i, time[0].to_i, time[1].to_i
-      @event_end = DateTime.new date[0].to_i, date[1].to_i, date[2].to_i, time[0].to_i, time[1].to_i
+      # default to one-hour event - until I can implement "for x hours (minutes)"
+      @event_end = DateTime.new date[0].to_i, date[1].to_i, date[2].to_i, time[0].to_i + 1, time[1].to_i
       @event = create_calendar_event
     else
       # nop

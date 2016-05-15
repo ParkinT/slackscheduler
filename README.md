@@ -16,6 +16,7 @@ schedule [Follow up on product launch] on May 4
 schedule "Product Discussion" on May 27 at 3:00 pm @sean @paul @alex
 
 ```
+
 { A few things to note about these examples:
   - The **message** that will included as the title and text of any notifications must be surrounded by matching quotes or square brackets (" or ' are acceptable)
   - Two important keywords to use are **AT** and **ON**.  These denote the Date and Time (respectively)
@@ -24,6 +25,7 @@ schedule "Product Discussion" on May 27 at 3:00 pm @sean @paul @alex
   - The time __is__ optional.  If no time is given 8am will be assumed
   - The time is in YOUR LOCAL TIMEZONE (set as part of the configuration - see below) and will be adjusted for all participants
   - You can "mention" others (by their Slack handle) to be included, and invited to, but they must have setup their configuration in order to receive the invitation
+  - Currently, any meeting (event) will be set for a duration of ONE HOUR.  I have plans to enhance this and allow you to specify a duration (stay tuned)
 
 Before you can utilize the functionality you will need to "setup" your details in the application.  No fear; this is also accomplished through Slack!
 
