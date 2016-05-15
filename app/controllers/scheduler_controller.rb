@@ -47,7 +47,6 @@ return json must include
       input = params[:text].downcase
 
       email = input.match(/email:\W*mailto:([0-9a-zA-Z\._\+@]+)\W?/)[1]
-      binding.pry
       timezone = TIMEZONES[input.match(/timezone:\W(\d+)\W?/)[1].to_i]
       user.update_attributes(name: params[:user_name], email: email, tz: timezone)
       UserMailer.welcome_email(user).deliver_now
