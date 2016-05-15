@@ -81,7 +81,11 @@ return json must include
                  when 0
                    "#{'%02d' % @event_duration[:minutes]} minutes"
                  else
-                   "#{@event_duration[:hours]}:#{'%02d' % @event_duration[:minutes]}"
+                   if @event_duration[:minutes] == 0
+                     numeralize(@event_duration[:hours])
+                   else
+                     "#{@event_duration[:hours]}:#{'%02d' % @event_duration[:minutes]}"
+                   end
                  end
       desc = input_string.scan(/[“"|'|\[|{](.*)[”"|'|\]|}]/)   #message is surrounded in "" or '' or [] or {}
       @description = desc[0][0]
@@ -104,7 +108,7 @@ return json must include
                 end
       @summary = "#{@description.scan(/^([\w]+)/)[0]} #{weekday} #{date[1]}-#{date[2]}"
       @summary = "#{@summary}-#{date[0]}" unless date[0].to_i == Date.today.year
-      @summary = "#{@summary}  -  #{@event_duration[:text]} duration"
+      @summary = "#{@summary} (#{@event_duration[:text]})"
       @timezone_id = @user.tz
 
       @event_start = DateTime.new date[0].to_i, date[1].to_i, date[2].to_i, time[0].to_i, time[1].to_i
@@ -234,6 +238,38 @@ return json must include
       #e.attendee @attendees if @attendees   # an array of 'mailto'
     end
     cal
+  end
+
+  def numeralize(number)
+    # there may be a more elegant way to do this, but I do not have ready access to it at the moment
+    case number
+    when 1
+      "One Hour"
+    when 2
+      "Two Hours"
+    when 3
+      "Three Hours"
+    when 4
+      "Four Hours!"
+    when 5
+      "Five Hours!"
+    when 6
+      "Six Hours!?"
+    when 7
+      "Seven Hours!?"
+    when 8
+      "Eight Hours. REALLY?"
+    when 9
+      "*Nine Hours*"
+    when 10
+      "*Ten Grueling Hours*"
+    when 11
+      "Eleven Hours"
+    when 12
+      "Twelve Hours"
+    when 24
+      "All Day"
+    end
   end
 
 end
