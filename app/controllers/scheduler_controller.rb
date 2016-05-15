@@ -49,11 +49,13 @@ return json must include
       email = input.match(/email:\W*([0-9a-zA-Z\._\+@]+)\W?/)[1]
       timezone = TIMEZONES[input.match(/timezone:\W(\d+)\W?/)[1].to_i]
       user.update_attributes(name: params[:user_name], email: email, tz: timezone)
+logger.debug "in setup: user is #{user.inspect}"
       UserMailer.welcome_email(user).deliver_now
       render :json => { :username => SLACK_SCHEDULER_USER_NAME, :response_type => EPHEMERAL, :text => "Configuration updated!\nA validation email has been sent to #{email}" } and return
     when 'schedule', 'sched', 'set'
       @user_name = params[:user_name]
       @user = find_or_create_user(params[:user_id])  #locate or add in database
+logger.debug "in 'schedule' user is #{@user.inspect}"
       if @user.need_configuration?
         render :json => test_object = { :username => SLACK_SCHEDULER_USER_NAME, :response_type => EPHEMERAL, :text => SETUP_CONFIGURATION_TEXT } and return
       end
@@ -110,6 +112,7 @@ return json must include
 
   def index
     if request.post?
+logger.debug "in index, user is #{@user.inspect}"
       summary =  @event.instance_variable_get(:@events).first.instance_variable_get(:@summary)
       UserMailer.notification_email(@user, @event).deliver_now
       @attendees.each do |a|  #notify any invited
