@@ -4,10 +4,12 @@ class SchedulerController < ApplicationController
   before_action :parse_input
 
   SLACK_SCHEDULER_USER_NAME = 'slack-scheduler'
-  EPHEMERAL = 'ephemeral'
-  IN_CHANNEL = 'in-channel'
+  EPHEMERAL = "ephemeral"
+  IN_CHANNEL = "in-channel"
 
   SETUP_CONFIGURATION_TEXT = ":dark_sunglasses: I need a little more information before I can do that for you\nSend this command, please\n`setup email: your.email@address.com timezone: X`\nWhere *X* is\n 1 for East US, 2 for Central US, 3 for Mountain US, 4 for Pacific US"
+  SETUP_ERROR_TEXT = ":question: I did not quite understan your intent.\nTry again.\nRemember you need to follow *this* format `setup email: your.email@address.com timezone: X`\nWhere *X* is\n 1 for East US, 2 for Central US, 3 for Mountain US, 4 for Pacific US"
+
   TIMEZONES = ['', 'America/New_York', 'America/Chicago', 'America/Denver', 'America/Los_Angeless', 'America/Anchorage']
 
 =begin
@@ -46,8 +48,16 @@ return json must include
       user = find_or_create_user(params[:user_id])
       input = params[:text].downcase
 
+      # better error handling
+      email_input = input.match(/email:\W*mailto:([0-9a-zA-Z\._\+@]+)\W?/)
+      timezone_input =  input.match(/timezone:\W(\d+)\W?/)
+
+      if (email_input.blank? || timezone_input.blank?)
+        render :json => test_object = { :username => SLACK_SCHEDULER_USER_NAME, :response_type => EPHEMERAL, :text => SETUP_ERROR_TEXT } and return
+      end
       email = input.match(/email:\W*mailto:([0-9a-zA-Z\._\+@]+)\W?/)[1]
       timezone = TIMEZONES[input.match(/timezone:\W(\d+)\W?/)[1].to_i]
+
       user.update_attributes(name: params[:user_name], email: email, tz: timezone)
       UserMailer.welcome_email(user).deliver_now
       render :json => { :username => SLACK_SCHEDULER_USER_NAME, :response_type => EPHEMERAL, :text => "Configuration updated!\nA validation email has been sent to #{email}" } and return
