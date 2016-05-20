@@ -116,7 +116,7 @@ return json must include
                 when 6
                   'Saturday'
                 end
-      @summary = "#{@description.scan(/^([\w]+)/)[0]} #{weekday} #{date[1]}-#{date[2]}"
+      @summary = "#{@description[0..30].gsub(/\s\w+\s*$/,'...')} #{weekday} #{date[1]}-#{date[2]}"
       @summary = "#{@summary}-#{date[0]}" unless date[0].to_i == Date.today.year
       @summary = "#{@summary} (#{@event_duration[:text]})"
       @timezone_id = @user.tz
@@ -207,7 +207,10 @@ return json must include
     day = date_parts[0][0]
     yr = date_parts[0][1].tr(', ', '') if date_parts[0][1]
     year = yr ||= Date.today.year
-    [year, month, day]
+    # if the date is in the past, then year must be incremented
+    year = Date.today.year.to_i + 1 if (Date.today > Date.parse("#{month}-#{day}-#{year}"))
+
+    [year.to_i, month.to_i, day.to_i]
   end
 
   def find_times(input_string)
