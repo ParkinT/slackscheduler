@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
-    <head>
-          <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
-            </head>
-              <body>
-                    <h1>Slack Scheduler for <%= @user.name %></h1>
-                    <p>This is your reminder.  Click to add to your calendar.
-                  We will add more details here.
-                  </p>
-                  <p>Thanks for using Slack Scheduler</p>
-                </body>
-                </html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Slack Scheduler has helped you scheduled your meeting!</h1>
+    <p><%= @user.name %>,</p>
+    <p>Here is the event reminder for <em><%= @summary %></em>.</p>
+    <p>Just click to add to your calendar.</p>
+    <p>&nbsp;</p>
+  <p>Thanks for using Slack Scheduler</p>
+</body>
+</html>
