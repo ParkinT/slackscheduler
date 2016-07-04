@@ -8,7 +8,7 @@ class SchedulerController < ApplicationController
   IN_CHANNEL = "in-channel"
 
   SETUP_CONFIGURATION_TEXT = ":dark_sunglasses: I need a little more information before I can do that for you\nSend this command, please\n`setup email: your.email@address.com timezone: X`\nWhere *X* is\n 1 for East US, 2 for Central US, 3 for Mountain US, 4 for Pacific US"
-  SETUP_ERROR_TEXT = ":question: I did not quite understan your intent.\nTry again.\nRemember you need to follow *this* format `setup email: your.email@address.com timezone: X`\nWhere *X* is\n 1 for East US, 2 for Central US, 3 for Mountain US, 4 for Pacific US"
+  SETUP_ERROR_TEXT = ":question: I did not quite understand your intent.\nTry again.\nRemember you need to follow *this* format `setup email: your.email@address.com timezone: X`\nWhere *X* is\n 1 for East US, 2 for Central US, 3 for Mountain US, 4 for Pacific US"
 
   TIMEZONES = ['', 'America/New_York', 'America/Chicago', 'America/Denver', 'America/Los_Angeless', 'America/Anchorage']
 
